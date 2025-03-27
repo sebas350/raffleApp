@@ -8,21 +8,38 @@ export function Main(){
     for(let index = 1; index <11; index++){
         const row = document.createElement('div');
         for(let index = 1; index <11; index++){
-            const column = document.createElement('div');
-            column.style.width = '30px';
-            column.style.height = '30px';
-            column.style.border = '2px solid red';
-            column.textContent = `${index + d}`;
-            row.append(column);
+            const btn = document.createElement('button');
+            btn.style.width = '30px';
+            btn.style.height = '30px';
+            //btn.style.border = '1px solid red';
+            btn.textContent = `${index + d}`;
+            //column.style.margin = 'auto';
+            btn.style.display = 'flex';
+            btn.style.justifyContent = 'center';
+            btn.style.alignItems = 'center';
+            
+            //const btn = document.createElement('button');
+            //btn.append(column);
+            
+            row.append(btn);
             
         }
+        const divPago = document.createElement('div');
+        divPago.style.border = '1px solid blue';
+        divPago.style.width = '500px';
+        divPago.style.height = '500px';
+        divPago.style.margin = 'auto';
+        divPago.id = d;
+        divPago.style.display = 'none';
+        
         
         row.style.display = 'flex';
-        container.append(row);
+        row.style.justifyContent = 'center';
+        
+        container.append(row, divPago);
         d = d + 10;
         
     }
-
     
     return container;
 }
