@@ -30,7 +30,7 @@ export function Main(){
         divPago.style.height = '500px';
         divPago.style.margin = 'auto';
         divPago.id = d;
-        divPago.style.display = 'none';
+        //divPago.style.display = 'none';
         
         
         row.style.display = 'flex';
