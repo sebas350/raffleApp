@@ -13,6 +13,14 @@ export function Main(){
             btn.style.height = '30px';
             //btn.style.border = '1px solid red';
             btn.textContent = `${index + d}`;
+            btn.onclick = () => {
+                if(divPago.style.display == 'block'){
+                    divPago.style.display = 'none';
+                } else{
+                    divPago.style.display = 'block';
+                }
+                
+            }
             //column.style.margin = 'auto';
             btn.style.display = 'flex';
             btn.style.justifyContent = 'center';
