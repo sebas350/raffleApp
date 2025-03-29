@@ -1,53 +1,65 @@
-export function Main(){
+export function Main() {
     const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = 'center';
+
     const h1 = document.createElement('h1');
     h1.textContent = 'Sorteo';
-    
     container.append(h1);
-    var d = 0;
-    for(let index = 1; index <11; index++){
-        const row = document.createElement('div');
-        for(let index = 1; index <11; index++){
-            const btn = document.createElement('button');
-            btn.style.width = '30px';
-            btn.style.height = '30px';
-            //btn.style.border = '1px solid red';
-            btn.textContent = `${index + d}`;
-            btn.onclick = () => {
-                if(divPago.style.display == 'block'){
-                    divPago.style.display = 'none';
-                } else{
-                    divPago.style.display = 'block';
-                }
-                
-            }
-            //column.style.margin = 'auto';
-            btn.style.display = 'flex';
-            btn.style.justifyContent = 'center';
-            btn.style.alignItems = 'center';
-            
-            //const btn = document.createElement('button');
-            //btn.append(column);
-            
-            row.append(btn);
-            
-        }
-        const divPago = document.createElement('div');
-        divPago.style.border = '1px solid blue';
-        divPago.style.width = '500px';
-        divPago.style.height = '500px';
-        divPago.style.margin = 'auto';
-        divPago.id = d;
-        divPago.style.display = 'none';
-        
-        
-        row.style.display = 'flex';
-        row.style.justifyContent = 'center';
-        
-        container.append(row, divPago);
-        d = d + 10;
-        
-    }
+
+    // Contenedor de la grilla de botones
+    const gridContainer = document.createElement('div');
+    gridContainer.style.display = 'grid';
+    gridContainer.style.gridTemplateColumns = 'repeat(10, 30px)';
+    gridContainer.style.gap = '5px';
+    gridContainer.style.margin = '20px 0';
+
+    // Contenedor del div de pago (se mostrará/ocultará)
+    const divPago = document.createElement('div');
+    divPago.style.border = '1px solid blue';
+    divPago.style.width = '500px';
+    divPago.style.height = '500px';
+    divPago.style.margin = 'auto';
+    divPago.className = 'pago';
+    divPago.style.display = 'none';
+    divPago.style.position = 'absolute';
+    divPago.style.background = 'white';
+    divPago.style.borderRadius = '5px';
     
+    
+    const btnX = document.createElement('button');
+    btnX.style.position = 'absolute';
+    btnX.style.top = '10px';
+    btnX.style.right = '10px';
+    btnX.textContent = 'X';
+    
+    btnX.onclick = () => {
+        divPago.animate([{transform: 'scale(1)', opacity: 1 }, { transform: 'scale(0)', opacity: 0 }],    { duration: 300, fill: 'forwards' });
+        setTimeout(() => {divPago.style.display = 'none';}, 300);
+    };
+     
+    
+    divPago.append(btnX);
+
+    for (let i = 1; i <= 100; i++) {
+        const btn = document.createElement('button');
+        btn.style.width = '30px';
+        btn.style.height = '30px';
+        btn.style.display = 'flex';
+        btn.style.justifyContent = 'center';
+        btn.style.alignItems = 'center';
+        btn.textContent = i;
+
+        btn.onclick = () => {
+            window.scrollTo(0,0);
+            divPago.style.display = divPago.style.display === 'none' ? 'block' : 'none';
+            divPago.animate([{transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }],    { duration: 300, fill: 'forwards' });
+        };
+
+        gridContainer.appendChild(btn);
+    }
+
+    container.append(gridContainer, divPago);
     return container;
 }
