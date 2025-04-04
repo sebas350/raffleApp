@@ -1,3 +1,4 @@
+import { Paid } from './paid.js';
 import './styles/main.css';
 
 export function Main() {
@@ -10,27 +11,9 @@ export function Main() {
 
     // Contenedor de la grilla de botones
     const gridContainer = document.createElement('div');
-    gridContainer.classList.add('grid-container');
-
-    const divPago = document.createElement('div');
-    divPago.style.display = 'none';
-    divPago.classList.add('div-pago');
+    gridContainer.classList.add('grid-container'); 
+    const divPaid = Paid();
     
-    
-    
-    const btnX = document.createElement('button');
-    btnX.textContent = 'X';
-    btnX.classList.add('btn-x');
-    
-    btnX.onclick = () => {
-        divPago.animate([{transform: 'scale(1)', opacity: 1 }, { transform: 'scale(0)', opacity: 0 }],    { duration: 300, fill: 'forwards' }).onfinish = () => {
-        divPago.style.display = 'none';
-        };
-    };
-     
-    
-    divPago.append(btnX);
-
     for (let i = 1; i <= 100; i++) {
         const btn = document.createElement('button');
         btn.classList.add('btn');
@@ -38,13 +21,13 @@ export function Main() {
 
         btn.onclick = () => {
             window.scrollTo(0,0);
-            divPago.style.display = divPago.style.display === 'none' ? 'block' : 'none';
-            divPago.animate([{transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }],    { duration: 300, fill: 'forwards' });
+            divPaid.style.display = divPaid.style.display === 'none' ? 'block' : 'none';
+            divPaid.animate([{transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }],    { duration: 300, fill: 'forwards' });
         };
 
         gridContainer.appendChild(btn);
     }
 
-    container.append(gridContainer, divPago);
+    container.append(gridContainer, divPaid);
     return container;
 }

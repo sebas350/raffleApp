@@ -1,0 +1,15 @@
+.btn-x{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.div-pago{
+    border: 1px solid blue;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    position: absolute;
+    background: white;
+    border-radius: 3px;
+}
