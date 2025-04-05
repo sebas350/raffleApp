@@ -5,3 +5,8 @@
 #app{
     background: blue;
 }
+
+body{
+    background: green;
+    margin: 0;
+}
