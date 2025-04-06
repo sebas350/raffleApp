@@ -17,9 +17,10 @@ export function Main() {
     for (let i = 1; i <= 100; i++) {
         const btn = document.createElement('button');
         btn.classList.add('btn');
-        btn.textContent = i;
-
+        btn.textContent = i; 
+        
         btn.onclick = () => {
+            divPaid.updateNum(i);
             window.scrollTo(0,0);
             divPaid.style.display = divPaid.style.display === 'none' ? 'block' : 'none';
             divPaid.animate([{transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }],    { duration: 300, fill: 'forwards' });
