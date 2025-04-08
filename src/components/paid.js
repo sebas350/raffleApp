@@ -1,4 +1,5 @@
 import './styles/paid.css';
+import {CreateCardForm} from './createCardForm.js'
 
 export function Paid(){
     const container = document.createElement('div');
@@ -18,7 +19,7 @@ const funOptions = (value) => {
             
         }else if(value == 'Tarjeta Crédito/débito'){
             divOptions.innerHTML = '';
-            divOptions.append(tarjetForm);
+            divOptions.append(cardForm);
         }else if(value == 'Efectivo'){
             divOptions.textContent = 'hola Efectivo';
         }
@@ -44,39 +45,8 @@ const funOptions = (value) => {
     }
     
     
-//element method paid
-    //credit/debit
-    const tarjetForm = document.createElement('form');
-
-const inputName = document.createElement('input');
-inputName.type = 'text';
-inputName.placeholder = 'Nombre tal como sale en la tarjeta';
-
-const inputNum = document.createElement('input');
-inputNum.type = 'text';
-inputNum.placeholder = 'Número de tarjeta';
-
-const inputMonth = document.createElement('input');
-inputMonth.type = 'text';
-inputMonth.placeholder = 'Mes (MM)';
-
-const inputYear = document.createElement('input');
-inputYear.type = 'text';
-inputYear.placeholder = 'Año (YY)';
-
-const inputCode = document.createElement('input');
-inputCode.type = 'password';
-inputCode.placeholder = 'Código de seguridad';
-
-const inputDni = document.createElement('input');
-inputDni.type = 'number';
-inputDni.placeholder = 'DNI';
-
-const inputMail = document.createElement('input');
-inputMail.type = 'email';
-inputMail.placeholder = 'Correo electrónico';
-
-tarjetForm.append(inputName,inputNum,inputMonth,inputYear,inputCode,inputDni,inputMail);
+//cardForm
+const cardForm = CreateCardForm();    
 
 
 funOptions(select.value);
