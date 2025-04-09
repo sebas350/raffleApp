@@ -1,5 +1,6 @@
 import './styles/paid.css';
 import {CardForm} from './cardForm.js'
+import {CreateBtn} from './utils.js'
 
 export function Paid(){
     const container = document.createElement('div');
@@ -13,20 +14,10 @@ export function Paid(){
     
 const divOptions = document.createElement('div');  
     
-const funOptions = (value) => {
-    if (value === 'Cripto'){
-            divOptions.textContent = 'hola cripto';
-            
-        }else if(value == 'Tarjeta Crédito/débito'){
-            divOptions.innerHTML = '';
-            divOptions.append(divCard);
-        }else if(value == 'Efectivo'){
-            divOptions.textContent = 'hola Efectivo';
-        }
-        else{
-            divOptions.textContent = 'hola transferencia';
-        }
-}    
+//options payment
+const funOptions = (key) => {
+    options[key]();
+};    
     
     
     //select
@@ -36,11 +27,22 @@ const funOptions = (value) => {
     }
     
     //options
-    const options = ['Tarjeta Crédito/débito', 'Transferencia', 'Cripto', 'Efectivo'];
+    const options = {
+    card: () => {
+        divOptions.innerHTML = '';
+        divOptions.append(divCard);
+    },
+    transfer: () => divOptions.textContent = 'hola transfer',
+    cripto: () => divOptions.textContent = 'hola cripto',
+    efective: () => divOptions.textContent = 'hola efectivo'
+};
     
-    for (const text of options) {
+    const menuOptions = [{label:'Tarjeta Crédito/débito', value: 'card'}, {label:'Transferencia', value: 'transfer'}, {label:'Cripto', value: 'cripto'}, {label:'Efectivo', value: 'efective'}];
+    
+    for (const opt of menuOptions) {
         const option = document.createElement('option');
-        option.textContent = `${text}`;
+        option.textContent = opt.label;
+        option.value = opt.value;
         select.append(option);
     }
     
@@ -56,19 +58,11 @@ divSelect.append(pSelect, select);
     
     
     
+    const btnClose = CreateBtn(container);
     
     
-    const btn = document.createElement('button');
-    btn.textContent = 'X';
-    btn.classList.add('btn-x');
-    
-    btn.onclick = () => {
-        container.animate([{transform: 'scale(1)', opacity: 1 }, { transform: 'scale(0)', opacity: 0 }],    { duration: 300, fill: 'forwards' }).onfinish = () => {
-        container.style.display = 'none';
-        };
-    };
      
-    container.append(title, divSelect, divOptions, btn);
+    container.append(title, divSelect, divOptions, btnClose);
     
     container.updateNum = (num) => {
         title.textContent = `Numero: ${num}`;
