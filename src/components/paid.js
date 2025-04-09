@@ -1,5 +1,5 @@
 import './styles/paid.css';
-import {CreateCardForm} from './createCardForm.js'
+import {CardForm} from './cardForm.js'
 
 export function Paid(){
     const container = document.createElement('div');
@@ -19,7 +19,7 @@ const funOptions = (value) => {
             
         }else if(value == 'Tarjeta Crédito/débito'){
             divOptions.innerHTML = '';
-            divOptions.append(cardForm);
+            divOptions.append(divCard);
         }else if(value == 'Efectivo'){
             divOptions.textContent = 'hola Efectivo';
         }
@@ -46,7 +46,7 @@ const funOptions = (value) => {
     
     
 //cardForm
-const cardForm = CreateCardForm();    
+const divCard = CardForm();    
 
 
 funOptions(select.value);
@@ -55,7 +55,7 @@ funOptions(select.value);
 divSelect.append(pSelect, select);
     
     
-    container.append(title, divSelect, divOptions);
+    
     
     
     const btn = document.createElement('button');
@@ -68,7 +68,7 @@ divSelect.append(pSelect, select);
         };
     };
      
-    container.append(btn);
+    container.append(title, divSelect, divOptions, btn);
     
     container.updateNum = (num) => {
         title.textContent = `Numero: ${num}`;
