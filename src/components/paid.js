@@ -39,6 +39,13 @@ const funOptions = (key) => {
     
     const menuOptions = [{label:'Tarjeta Crédito/débito', value: 'card'}, {label:'Transferencia', value: 'transfer'}, {label:'Cripto', value: 'cripto'}, {label:'Efectivo', value: 'efective'}];
     
+    
+ const placeholder = document.createElement('option');
+placeholder.textContent = 'Selecciona un método';
+placeholder.disabled = true;
+placeholder.selected = true;
+select.append(placeholder);   
+    
     for (const opt of menuOptions) {
         const option = document.createElement('option');
         option.textContent = opt.label;
@@ -47,11 +54,12 @@ const funOptions = (key) => {
     }
     
     
+    
 //cardForm
 const divCard = CardForm();    
 
 
-funOptions(select.value);
+//funOptions(select.value);
 
 
 divSelect.append(pSelect, select);
