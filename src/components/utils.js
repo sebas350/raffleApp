@@ -1,9 +1,10 @@
 import './styles/utils.css';
 
-export const createInput = (type, placeholder) => {
+export const createInput = (type, placeholder, name='') => {
     const input = document.createElement('input');
     input.type = type;
     input.placeholder = placeholder;
+    input.value = name;
     return input;
 };
 

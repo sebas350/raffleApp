@@ -6,27 +6,32 @@ export function Paid(){
     const container = document.createElement('div');
     container.style.display = 'none';
     container.classList.add('div-pago');
-    const divSelect = document.createElement('div');
-    const pSelect = document.createElement('p');
-    pSelect.textContent = 'Selecciona el metodo de pago:';
+    
+    
     const title = document.createElement('h1');
     title.textContent = `Numero:`;
     
-const divOptions = document.createElement('div');  
+  
     
-//options payment
+//options payment function 
 const funOptions = (key) => {
     options[key]();
 };    
     
     
     //select
+    const divSelect = document.createElement('div');
     const select = document.createElement('select');
+    select.id = 'method-select';
+    const labelSelect = document.createElement('label');
+    labelSelect.textContent = 'Selecciona el metodo de pago:';
+    labelSelect.htmlFor = 'method-select';
     select.onchange = (e) => {
         funOptions(e.target.value);
     }
     
     //options
+    const divOptions = document.createElement('div');
     const options = {
     card: () => {
         divOptions.innerHTML = '';
@@ -34,10 +39,10 @@ const funOptions = (key) => {
     },
     transfer: () => divOptions.textContent = 'hola transfer',
     cripto: () => divOptions.textContent = 'hola cripto',
-    efective: () => divOptions.textContent = 'hola efectivo'
+    cash: () => divOptions.textContent = 'hola efectivo'
 };
     
-    const menuOptions = [{label:'Tarjeta Crédito/débito', value: 'card'}, {label:'Transferencia', value: 'transfer'}, {label:'Cripto', value: 'cripto'}, {label:'Efectivo', value: 'efective'}];
+    const menuOptions = [{label:'Tarjeta Crédito/débito', value: 'card'}, {label:'Transferencia', value: 'transfer'}, {label:'Cripto', value: 'cripto'}, {label:'Efectivo', value: 'cash'}];
     
     
  const placeholder = document.createElement('option');
@@ -62,7 +67,7 @@ const divCard = CardForm();
 //funOptions(select.value);
 
 
-divSelect.append(pSelect, select);
+divSelect.append(labelSelect, select);
     
     
     

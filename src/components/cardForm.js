@@ -9,7 +9,8 @@ export const CardForm = () => {
         createInput('text', 'Año (YY)'),
         createInput('password', 'Código de seguridad'),
         createInput('number', 'DNI'),
-        createInput('email', 'Correo electrónico')
+        createInput('email', 'Correo electrónico'),
+        createInput('submit', '', 'Participar')
     ];
     form.append(...inputs);
     return form;
