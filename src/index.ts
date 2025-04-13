@@ -1,3 +1,3 @@
-import { initApp } from './app.ts';
+import { initApp } from './app';
 
 initApp();

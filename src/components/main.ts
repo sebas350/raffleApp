@@ -1,23 +1,23 @@
-import { Paid } from './paid.ts';
+import { Paid } from './paid';
 import './styles/main.css';
 
-export function Main(): HTMLElement {
-    const container = document.createElement('div');
+export function Main(): HTMLDivElement {
+    const container: HTMLDivElement = document.createElement('div');
     container.classList.add('container');   
 
-    const h1 = document.createElement('h1');
+    const h1: HTMLParagraphElement = document.createElement('h1');
     h1.textContent = 'Sorteo';
     container.append(h1);
 
     // Contenedor de la grilla de botones
-    const gridContainer = document.createElement('div');
+    const gridContainer: HTMLDivElement = document.createElement('div');
     gridContainer.classList.add('grid-container'); 
     const divPaid = Paid();
     
     for (let i = 1; i <= 100; i++) {
-        const btn = document.createElement('button');
+        const btn: HTMLButtonElement = document.createElement('button');
         btn.classList.add('btn');
-        btn.textContent = i; 
+        btn.textContent = i.toString(); 
         
         btn.onclick = () => {
             divPaid.updateNum(i);

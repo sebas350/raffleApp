@@ -1,6 +1,6 @@
 import './styles/utils.css';
 
-export const createInput = (type, placeholder, name='') => {
+export const createInput = (type: string, placeholder: string, name: string =''): HTMLInputElement => {
     const input = document.createElement('input');
     input.type = type;
     input.placeholder = placeholder;
@@ -8,7 +8,7 @@ export const createInput = (type, placeholder, name='') => {
     return input;
 };
 
-export function CreateBtn(container){
+export function CreateBtn(container: HTMLDivElement): HTMLButtonElement {
     const btn = document.createElement('button');
     btn.textContent = 'X';
     btn.classList.add('btn-x');
