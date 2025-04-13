@@ -14,6 +14,9 @@ module.exports = {
         open: true,
         hot: true
     },
+    resolve: {
+        extensions: ['.ts', '.js'],
+    },
     module: {
         rules: [
             {test: /\.css$/,
