@@ -2,7 +2,7 @@ import { Paid } from './paid';
 import './styles/main.css';
 
 export function Main(): HTMLDivElement {
-    const container: HTMLDivElement = document.createElement('div');
+    const container = document.createElement('div');
     container.classList.add('container');   
 
     const h1: HTMLParagraphElement = document.createElement('h1');
