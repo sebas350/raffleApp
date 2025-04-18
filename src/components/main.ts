@@ -1,8 +1,9 @@
 import { Paid } from './paid';
 import './styles/main.css';
 
-export function Main(): HTMLDivElement {
+export async function Main(): Promise<HTMLDivElement> {
     const container = document.createElement('div');
+    const divTable: HTMLDivElement = document.createElement('div');
     container.classList.add('container');   
 
     const h1: HTMLParagraphElement = document.createElement('h1');
@@ -13,6 +14,24 @@ export function Main(): HTMLDivElement {
     const gridContainer: HTMLDivElement = document.createElement('div');
     gridContainer.classList.add('grid-container'); 
     const divPaid = Paid();
+    
+    //fetch
+    try{
+        const response = await fetch('http://localhost:3000');
+        const data = await response.json();
+        
+        const table = document.createElement('table');
+            for (const item of data) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.textContent = JSON.stringify(item);
+                row.appendChild(cell);
+                table.appendChild(row);
+            }
+            divTable.appendChild(table);
+    }catch(error){
+    divTable.textContent = 'error';
+    console.error(error);}
     
     for (let i = 1; i <= 100; i++) {
         const btn: HTMLButtonElement = document.createElement('button');
@@ -29,6 +48,6 @@ export function Main(): HTMLDivElement {
         gridContainer.appendChild(btn);
     }
 
-    container.append(gridContainer, divPaid);
+    container.append(gridContainer, divPaid, divTable);
     return container;
 }

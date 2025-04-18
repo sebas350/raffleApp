@@ -2,7 +2,7 @@ import { Main } from './components/main';
 import { Footer } from './components/footer';
 import './styles/app.css';
 
-export function initApp(): void {
+export async function initApp(): Promise<void> {
   
   const app = document.querySelector('#app');
 
@@ -11,7 +11,7 @@ export function initApp(): void {
   }
   
   const footer = Footer();
-  const main = Main();
+  const main = await Main();
 
   app.append(main, footer);
 }
