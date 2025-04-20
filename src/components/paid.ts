@@ -45,10 +45,7 @@ const funOptions = (key: string) => {
     }
     
     const options: PaymentOptions = {
-    card: () => {
-        divOptions.innerHTML = '';
-        divOptions.append(divCard);
-    },
+    card: () => {},
     transfer: () => divOptions.textContent = 'hola transfer',
     cripto: () => divOptions.textContent = 'hola cripto',
     cash: () => divOptions.textContent = 'hola efectivo'
@@ -78,7 +75,7 @@ select.append(placeholder);
     
     
 //cardForm
-const divCard = CardForm();    
+    
 
 
 //funOptions(select.value);
@@ -96,6 +93,11 @@ divSelect.append(labelSelect, select);
     
     container.updateNum = (num: number) => {
         title.textContent = `Numero: ${num}`;
+        const divCard = CardForm(num);
+        options.card = () => {
+            divOptions.innerHTML = '';
+            divOptions.append(divCard);
+        };
     };
     
     return container;   
