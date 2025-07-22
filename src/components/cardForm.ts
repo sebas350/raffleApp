@@ -1,7 +1,10 @@
 import { createInput } from './utils'
+import type { PaidElement } from './paid'
+import type { MainElement } from './types'
 
-export const CardForm = (raffleNumber: number): HTMLFormElement => {
+export const CardForm = (raffleNumber: number, paidElement: PaidElement, mainElement: MainElement,): HTMLFormElement => {
   const form = document.createElement('form');
+  const alert: HTMLDivElement = document.createElement('div');
   
   const inputs: HTMLInputElement[] = [
     createInput('text', 'Nombre Completo', 'fullname'),
@@ -21,19 +24,40 @@ export const CardForm = (raffleNumber: number): HTMLFormElement => {
 
   form.append(...inputs, submit, hiddenInput);
 
-  // Evento submit con fetch
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
 
-     const inputs = form.querySelectorAll('input:not([type="submit"])');
+
+  // Evento submit con fetch
+
+form.addEventListener('submit', async (e) => {
+
+e.preventDefault();
+
+const elementInputs = form.querySelectorAll('input:not([type="submit"])');
     
     const formData: Record<string, string> = {};
+    
+    let hasEmpty = false;
+    
+    //validacion de input
+    elementInputs.forEach((input) => {
+  const el = input as HTMLInputElement;
+  
+  if(el.value.trim() == ''){
+      hasEmpty = true;
+  }else{
+      formData[el.name] = el.value;
+  }  
+});
 
-    inputs.forEach((input) => {
-  const inputElement = input as HTMLInputElement;
-  formData[inputElement.name] = inputElement.value;
-    });
-
+alert.textContent = '';
+alert.remove();
+    
+if(hasEmpty){
+      alert.textContent = 'Complete todos los campos';
+      form.append(alert);
+      return;
+  }
+    
     try {
       const res = await fetch('http://localhost:3000/participants', {
         method: 'POST',
@@ -43,12 +67,22 @@ export const CardForm = (raffleNumber: number): HTMLFormElement => {
         body: JSON.stringify(formData)
       });
 
-      const result = await res.json();
-      console.log('Participante creado:', result);
+      if (!res.ok) {
+    const errorData = await res.json();
+    mainElement.showNotification(errorData.message, false);
+    return;
+  }
+      
+      paidElement.closeWindow();
+      mainElement.updateDisabledButtons();
+      mainElement.tableRender();
+      mainElement.showNotification('¡Gracias por participar!', true);
+    
     } catch (err) {
-      console.error('Error al enviar el formulario:', err);
+      alert.textContent = 'Error al guardar el participante';
+      mainElement.showNotification('Error al realizar el pago', false);
     }
-  });
+});
 
-  return form;
+return form;       
 };
