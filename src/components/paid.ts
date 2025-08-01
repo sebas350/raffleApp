@@ -1,16 +1,12 @@
 import './styles/paid.css';
 import {CardForm} from './cardForm'
 import {CreateBtn} from './utils'
-import type { MainElement } from './types'
-
-// Extendemos HTMLDivElement para incluir la función personalizada
-export interface PaidElement extends HTMLDivElement {
-    updateNum: (num: number) => void;
-    closeWindow: () => void;
-}
+import type { MainElement, PaidElement } from './types'
 
 export function Paid(mainElement: MainElement): PaidElement {
+    
     const container = document.createElement('div') as PaidElement;
+    
     container.style.display = 'none';
     container.classList.add('div-pago');
     
@@ -28,6 +24,7 @@ const funOptions = (key: string) => {
     
     //select
     const divSelect: HTMLDivElement = document.createElement('div');
+    
     const select: HTMLSelectElement = document.createElement('select');
     select.id = 'method-select';
     const labelSelect: HTMLLabelElement = document.createElement('label');
@@ -97,13 +94,16 @@ divSelect.append(labelSelect, select);
     container.append(title, divSelect, divOptions, btnClose);
     
     container.updateNum = (num: number) => {
-        title.textContent = `Numero: ${num}`;
-        const divCard = CardForm(num, container, mainElement);
-        options.card = () => {
-            divOptions.innerHTML = '';
+    title.textContent = `Numero: ${num}`;
+    
+    options.card = () => {
+        divOptions.innerHTML = '';
+        
+        CardForm(num, container, mainElement).then((divCard) => {
             divOptions.append(divCard);
-        };
+        });
     };
+};
     
     return container;   
 }
