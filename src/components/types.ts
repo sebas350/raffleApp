@@ -25,3 +25,7 @@ export interface PaidElement extends HTMLDivElement {
     updateNum: (num: number) => void;
     closeWindow: () => void;
 }
+
+export type NumberGridElement = {
+  disabledButtons: () => Promise<void>;
+};

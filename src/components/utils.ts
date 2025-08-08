@@ -1,5 +1,5 @@
 import './styles/utils.css';
-import type { MercadoPagoInstance } from './types';
+import type { MercadoPagoInstance, Participant} from './types';
 
 export const createInput = (type: string, placeholder: string, name: string = ''): HTMLInputElement => {
   const input = document.createElement('input');
@@ -55,5 +55,17 @@ export async function loadMercadoPagoSDK(publicKey: string): Promise<MercadoPago
 declare global {
   interface Window {
     MercadoPago: any;
+  }
+}
+
+export async function fetchParticipants(): Promise<Participant[]> {
+  try {
+    const res = await fetch('http://localhost:3000/participants');
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const data = await res.json();
+    return Array.isArray(data) ? data : [data];
+  } catch (error) {
+    console.error('Error al obtener participantes:', error);
+    return [];
   }
 }
