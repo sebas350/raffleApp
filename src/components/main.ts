@@ -23,6 +23,7 @@ container.append(h1);
 // Contenedor de la grilla de botones  
 const gridContainer: HTMLDivElement = document.createElement('div');  
 gridContainer.classList.add('grid-container');   
+
 const divPaid = Paid(container);  
 
 container.tableRender = async () => {

@@ -1,109 +1,143 @@
 import './styles/paid.css';
 import {CardForm} from './cardForm'
-import {CreateBtn} from './utils'
+import {CreateBtn, loadMercadoPagoSDK} from './utils'
 import type { MainElement, PaidElement } from './types'
 
+import { subscribeNumber } from './store';
+import {RenderBrick} from './renderBrick'
+
+
+
+
 export function Paid(mainElement: MainElement): PaidElement {
-    
-    const container = document.createElement('div') as PaidElement;
-    
-    container.style.display = 'none';
-    container.classList.add('div-pago');
-    
-    
-    const title: HTMLHeadingElement = document.createElement('h1');
-    title.textContent = `Numero:`;
-    
-  
-    
-//options payment function 
-const funOptions = (key: string) => {
+  const container = document.createElement('div') as PaidElement;
+  container.style.display = 'none';
+  container.classList.add('div-pago');
+
+  const title: HTMLHeadingElement = document.createElement('h1');
+  title.textContent = `Numero:`;
+
+  // referencia al brick activo
+  let activeBrick: any = null;
+
+  const funOptions = (key: string) => {
     options[key]();
-};    
-    
-    
-    //select
-    const divSelect: HTMLDivElement = document.createElement('div');
-    
-    const select: HTMLSelectElement = document.createElement('select');
-    select.id = 'method-select';
-    const labelSelect: HTMLLabelElement = document.createElement('label');
-    labelSelect.textContent = 'Selecciona el metodo de pago:';
-    labelSelect.htmlFor = 'method-select';
-    
-    select.onchange = (e) => {
-        const target = e.target as HTMLSelectElement;
-        funOptions(target.value);
-    }
-    
-    //options
-    const divOptions: HTMLDivElement = document.createElement('div');
-    
-    interface PaymentOptions {
-      [key: string]: () => void;
-    }
-    
-    const options: PaymentOptions = {
-    card: () => {},
-    transfer: () => divOptions.textContent = 'hola transfer',
-    cripto: () => divOptions.textContent = 'hola cripto',
-    cash: () => divOptions.textContent = 'hola efectivo'
-};
-    
-   interface Option {
-        label: string;
-        value: string;
-    }
-    
-    const menuOptions: Option[] = [{label:'Tarjeta Crédito/débito', value: 'card'}, {label:'Transferencia', value: 'transfer'}, {label:'Cripto', value: 'cripto'}, {label:'Efectivo', value: 'cash'}];
-    
-    
- const placeholder: HTMLOptionElement = document.createElement('option');
-placeholder.textContent = 'Selecciona un método';
-placeholder.disabled = true;
-placeholder.selected = true;
-select.append(placeholder);   
-    
-    for (const opt of menuOptions) {
-        const option: HTMLOptionElement = document.createElement('option');
-        option.textContent = opt.label;
-        option.value = opt.value;
-        select.append(option);
-    }
-    
-    
-    
-//cardForm
-    
+  };
 
+  const divSelect: HTMLDivElement = document.createElement('div');
+  const select: HTMLSelectElement = document.createElement('select');
+  select.id = 'method-select';
+  const labelSelect: HTMLLabelElement = document.createElement('label');
+  labelSelect.textContent = 'Selecciona el metodo de pago:';
+  labelSelect.htmlFor = 'method-select';
 
-//funOptions(select.value);
+  select.onchange = (e) => {
+    const target = e.target as HTMLSelectElement;
+    funOptions(target.value);
+  };
 
+  const divOptions: HTMLDivElement = document.createElement('div');
 
-divSelect.append(labelSelect, select);
-    
-    const btnClose = CreateBtn(container);
-    
-    container.closeWindow = () => {
-  container.animate([{transform: 'scale(1)', opacity: 1 }, { transform: 'scale(0)', opacity: 0 }],    { duration: 300, fill: 'forwards' }).onfinish = () => {
-        container.style.display = 'none';
-        };
-    
- }   
-     
-    container.append(title, divSelect, divOptions, btnClose);
-    
-    container.updateNum = (num: number) => {
-    title.textContent = `Numero: ${num}`;
-    
-    options.card = () => {
-        divOptions.innerHTML = '';
-        
-        CardForm(num, container, mainElement).then((divCard) => {
-            divOptions.append(divCard);
-        });
+const divTransfer = document.createElement('div');
+
+const divCripto = document.createElement('div');
+
+const divCash = document.createElement('div');
+
+divOptions.append(divTransfer, divCripto, divCash); 
+  
+  
+
+  interface PaymentOptions {
+    [key: string]: () => void;
+  }
+
+  let brickMounted = false;
+  
+  
+  const { element, paymentContainer, getFormData } = CardForm();
+  
+  divOptions.append(element);
+  
+  element.style.display = 'none';
+  
+  const options: PaymentOptions = {
+  card: async () => {
+  element.style.display = 'block';
+    divTransfer.style.display = 'none';
+    divCripto.style.display = 'none';
+    divCash.style.display = 'none';
+
+    if (!brickMounted) {
+      const mpInstance = await loadMercadoPagoSDK('TEST-142b7eda-ae84-4537-9e72-4bddc099ab6b');
+      
+      await RenderBrick(mpInstance, paymentContainer.id, mainElement, container, getFormData);
+      brickMounted = true;
+      
+    }
+  },
+  transfer: () => {
+    element.style.display = 'none';
+    divTransfer.style.display = 'block';
+    divCripto.style.display = 'none';
+    divCash.style.display = 'none';
+    divTransfer.textContent = 'hola transfer';
+  },
+  cripto: () => {
+    element.style.display = 'none';
+    divTransfer.style.display = 'none';
+    divCripto.style.display = 'block';
+    divCash.style.display = 'none';
+    divCripto.textContent = 'hola cripto';
+  },
+  cash: () => {
+    element.style.display = 'none';
+    divTransfer.style.display = 'none';
+    divCripto.style.display = 'none';
+    divCash.style.display = 'block';
+    divCash.textContent = 'hola efectivo';
+  }
+}; 
+
+  const menuOptions: { label: string; value: string }[] = [
+    { label: 'Tarjeta Crédito/débito', value: 'card' },
+    { label: 'Transferencia', value: 'transfer' },
+    { label: 'Cripto', value: 'cripto' },
+    { label: 'Efectivo', value: 'cash' },
+  ];
+
+  const placeholder: HTMLOptionElement = document.createElement('option');
+  placeholder.textContent = 'Selecciona un método';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.append(placeholder);
+
+  for (const opt of menuOptions) {
+    const option: HTMLOptionElement = document.createElement('option');
+    option.textContent = opt.label;
+    option.value = opt.value;
+    select.append(option);
+  }
+
+  divSelect.append(labelSelect, select);
+
+  const btnClose = CreateBtn(container);
+
+  container.closeWindow = async () => {
+  
+  container.animate(
+      [{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(0)', opacity: 0 }],
+      { duration: 300, fill: 'forwards' }
+    ).onfinish = () => {
+      container.style.display = 'none';
     };
-};
-    
-    return container;   
+  };
+
+  container.append(title, divSelect, divOptions, btnClose);
+
+  subscribeNumber((num) => {
+    title.textContent = `Numero: ${num}`;
+  });
+
+  return container;
 }

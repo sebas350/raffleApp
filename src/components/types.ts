@@ -22,7 +22,6 @@ fetchParticipants: () => Promise<Participant[]>;
 }
 
 export interface PaidElement extends HTMLDivElement {
-    updateNum: (num: number) => void;
     closeWindow: () => void;
 }
 
