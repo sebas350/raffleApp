@@ -1,5 +1,5 @@
 import './styles/utils.css';
-import type { MercadoPagoInstance, Participant} from './types';
+import { Participant } from './types'
 
 export const createInput = (type: string, placeholder: string, name: string = ''): HTMLInputElement => {
   const input = document.createElement('input');
@@ -26,37 +26,6 @@ export function CreateBtn(container: HTMLDivElement): HTMLButtonElement {
   return btn;
 }
 
-export async function loadMercadoPagoSDK(publicKey: string): Promise<MercadoPagoInstance> {
-  // Si ya existe MercadoPago cargado
-  if (window.MercadoPago) {
-    return new window.MercadoPago(publicKey, { locale: 'es-AR' }); // ✅ USAR new
-  }
-
-  // Cargar el script
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://sdk.mercadopago.com/js/v2';
-    script.id = 'mp-sdk'; // opcional: evitar cargar dos veces
-
-    script.onload = () => {
-      if (window.MercadoPago) {
-        resolve(new window.MercadoPago(publicKey, { locale: 'es-AR' })); // ✅ USAR new
-      } else {
-        reject(new Error('No se pudo inicializar MercadoPago'));
-      }
-    };
-
-    script.onerror = () => reject(new Error('Error al cargar el SDK de Mercado Pago'));
-
-    document.head.appendChild(script);
-  });
-}
-
-declare global {
-  interface Window {
-    MercadoPago: any;
-  }
-}
 
 export async function fetchParticipants(): Promise<Participant[]> {
   try {

@@ -27,6 +27,6 @@ setTimeout(() => {
   notificationDiv.style.display = 'none';  
 }, 500);
 
-}, 2500); // visible por 2.5 segundos
+}, 5000); // visible por 2.5 segundos
 };
 

@@ -1,52 +1,10 @@
-import { createInput } from './utils';
-import { subscribeNumber } from './store';
+import {RenderBrick} from './renderBrick';
+import type { MainElement, PaidElement, ParticipantElement} from './types';
+import {ParticipantData} from './participantData';
 
-export function CardForm() {
-  const divForm = document.createElement('div');
-  
-  const alertBox = document.createElement('div');
-  alertBox.className = 'alert';
+export function CardForm(idContainer: string, divParticipant: ParticipantElement, mainElement: MainElement, paidElement: PaidElement){
 
-  const inputs = [
-    createInput('text', 'Nombre Completo', 'fullname'),
-    createInput('number', 'DNI', 'dni'),
-    createInput('number', 'Celular', 'cel'),
-    createInput('text', 'Correo electrónico', 'mail'),
-  ];
-
-  const hiddenInput = document.createElement('input');
-  hiddenInput.type = 'hidden';
-  hiddenInput.name = 'number';
-  
-  subscribeNumber((num) => {
-    if (num !== null) hiddenInput.value = num.toString();
-  });
-
-  const paymentContainer = document.createElement('div');
-  paymentContainer.id = 'paymentBrick_container';
-
-  divForm.append(...inputs, hiddenInput, alertBox, paymentContainer);
-
-  // Función para obtener formData al momento de pagar
-  const getFormData = (): Record<string, string> | null => {
-    const formData: Record<string, string> = {};
-    let hasEmpty = false;
-
-    [...inputs, hiddenInput].forEach((el) => {
-      if (el.type !== 'hidden' && el.value.trim() === '') {
-        hasEmpty = true;
-      } else {
-        formData[el.name] = el.value;
-      }
-    });
-
-    if (hasEmpty) {
-      alertBox.textContent = 'Complete todos los campos';
-      return null;
-    }
-
-    return formData;
-  };
-
-  return { element: divForm, paymentContainer, getFormData };
+RenderBrick(idContainer, divParticipant, mainElement, paidElement);
+    
+    
 }

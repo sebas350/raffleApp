@@ -2,15 +2,28 @@ let currentNumber: number | null = null;
 
 const subscribers: ((num: number | null) => void)[] = [];
 
-export async function setNumber(num: number): Promise<void> {
+export function setNumber(num: number): void {
   currentNumber = num;
   subscribers.forEach(cb => cb(currentNumber));
 }
 
-export async function getNumber(): Promise<number | null> {
+export function getNumber(): number | null {
   return currentNumber;
 }
 
 export function subscribeNumber(callback: (num: number | null) => void): void {
   subscribers.push(callback);
+}
+
+
+//store controller Brick
+
+let cardPaymentController: any | null = null;
+
+export function setCardPaymentController(controller: any) {
+  cardPaymentController = controller;
+}
+
+export function getCardPaymentController() {
+  return cardPaymentController;
 }

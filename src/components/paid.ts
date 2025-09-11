@@ -1,12 +1,11 @@
 import './styles/paid.css';
 import {CardForm} from './cardForm'
-import {CreateBtn, loadMercadoPagoSDK} from './utils'
-import type { MainElement, PaidElement } from './types'
+import {CreateBtn } from './utils'
+import type { MainElement, PaidElement, ParticipantElement } from './types'
 
 import { subscribeNumber } from './store';
-import {RenderBrick} from './renderBrick'
-
-
+import { getCardPaymentController } from './store';
+import { ParticipantData } from './participantData';
 
 
 export function Paid(mainElement: MainElement): PaidElement {
@@ -17,8 +16,6 @@ export function Paid(mainElement: MainElement): PaidElement {
   const title: HTMLHeadingElement = document.createElement('h1');
   title.textContent = `Numero:`;
 
-  // referencia al brick activo
-  let activeBrick: any = null;
 
   const funOptions = (key: string) => {
     options[key]();
@@ -38,60 +35,58 @@ export function Paid(mainElement: MainElement): PaidElement {
 
   const divOptions: HTMLDivElement = document.createElement('div');
 
+const divCard = document.createElement('div');
+divCard.id = 'cardPaymentBrick_container';
+
 const divTransfer = document.createElement('div');
 
 const divCripto = document.createElement('div');
 
 const divCash = document.createElement('div');
 
-divOptions.append(divTransfer, divCripto, divCash); 
+divOptions.append(divCard, divTransfer, divCripto, divCash); 
   
   
 
   interface PaymentOptions {
     [key: string]: () => void;
   }
-
-  let brickMounted = false;
   
+const divStatus: ParticipantElement = ParticipantData();
   
-  const { element, paymentContainer, getFormData } = CardForm();
-  
-  divOptions.append(element);
-  
-  element.style.display = 'none';
   
   const options: PaymentOptions = {
   card: async () => {
-  element.style.display = 'block';
+  divCard.style.display = 'block';
     divTransfer.style.display = 'none';
     divCripto.style.display = 'none';
     divCash.style.display = 'none';
-
-    if (!brickMounted) {
-      const mpInstance = await loadMercadoPagoSDK('TEST-142b7eda-ae84-4537-9e72-4bddc099ab6b');
-      
-      await RenderBrick(mpInstance, paymentContainer.id, mainElement, container, getFormData);
-      brickMounted = true;
-      
+    
+    if (!getCardPaymentController()) {
+      await CardForm('cardPaymentBrick_container', divStatus, mainElement, container);
+    
+    divCard.append(divStatus);  
     }
+    
+    
+
   },
   transfer: () => {
-    element.style.display = 'none';
+    divCard.style.display = 'none';
     divTransfer.style.display = 'block';
     divCripto.style.display = 'none';
     divCash.style.display = 'none';
     divTransfer.textContent = 'hola transfer';
   },
   cripto: () => {
-    element.style.display = 'none';
+    divCard.style.display = 'none';
     divTransfer.style.display = 'none';
     divCripto.style.display = 'block';
     divCash.style.display = 'none';
     divCripto.textContent = 'hola cripto';
   },
   cash: () => {
-    element.style.display = 'none';
+    divCard.style.display = 'none';
     divTransfer.style.display = 'none';
     divCripto.style.display = 'none';
     divCash.style.display = 'block';

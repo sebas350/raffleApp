@@ -28,3 +28,7 @@ export interface PaidElement extends HTMLDivElement {
 export type NumberGridElement = {
   disabledButtons: () => Promise<void>;
 };
+
+export interface ParticipantElement extends HTMLDivElement {
+  getParticipantData: () => Record<string, string>;
+}

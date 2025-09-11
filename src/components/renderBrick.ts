@@ -1,95 +1,117 @@
-import type { MainElement, PaidElement, MercadoPagoInstance } from './types';
+import { loadMercadoPago } from '@mercadopago/sdk-js';
+import {setCardPaymentController} from './store';
+import type { MainElement, PaidElement} from './types';
 import { subscribeNumber } from './store';
+import { ParticipantElement } from './types';
 
-export const RenderBrick = async (
-  mp: MercadoPagoInstance,
-  containerId: string,
-  mainElement: MainElement,
-  paidElement: PaidElement,
-  getFormData: () => Record<string, string> | null
-) => {
+export async function RenderBrick(idContainer: string, divParticipant: ParticipantElement, mainElement: MainElement, paidElement: PaidElement) {
+
+  
   let selectedNumber: number | null = null;
-
-const divStatus = document.createElement('div');
-
+  
   subscribeNumber((num) => {
-    selectedNumber = num;
+
+    selectedNumber = num;
+
+  });
+  
+  
+  const MercadoPagoConstructor = (await loadMercadoPago()) as any;
+
+  // instanciamos
+  const mp = new MercadoPagoConstructor('TEST-142b7eda-ae84-4537-9e72-4bddc099ab6b', {
+    locale: 'es-AR',
   });
 
   const bricksBuilder = mp.bricks();
 
-  const cardBrick = await bricksBuilder.create('cardPayment', containerId, {
-    initialization: { amount: 1000 },
+  const settings = {
+    initialization: {
+      amount: 1000,
+      payer: { email: '' },
+    },
     customization: {
-      paymentMethods: {
-        ticket: 'none',
-        bankTransfer: 'none',
-        creditCard: 'all',
-        debitCard: 'all',
-      },
+      visual: { hideFormTitle: true },
+      paymentMethods: { maxInstallments: 1 },
     },
     callbacks: {
-      onReady: () => {},
-      onError: (error: unknown) => {
-        console.error(error);
-        mainElement.showNotification('Error al cargar el formulario de pago', false);
-      },
-      onSubmit: async (cardFormData: Record<string, string>) => {
-  const formData = getFormData();
-  if (!formData) return;
+      onReady: () => console.log('Brick listo'),
+      onSubmit: async (paymentData: any) => {
 
-  // Paso 1 - Verificar número
-  const checkRes = await fetch(`http://localhost:3000/participants/check-number/${selectedNumber}`);
-  const checkData = await checkRes.json();
+  const checkRes = await fetch(`http://localhost:3000/participants/check-number/${selectedNumber}`);
 
-  if (!checkData) {
-    mainElement.showNotification(`El número ya fue asignado. Elija otro.`, false);
-    return;
-  }
+  const checkData = await checkRes.json();
 
-  // Paso 2 - Crear pago en backend
-  try {
-    const paymentRes = await fetch('http://localhost:3000/payments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: 1000,
-        ...cardFormData // Datos que devuelve el Brick
-      }),
-    });
 
-    const paymentData = await paymentRes.json();
+  if (!checkData) {
 
-    if (paymentData.status === 'approved') {
-      
-      
-      // Paso 3 - Registrar participante
-      await fetch('http://localhost:3000/participants', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    mainElement.showNotification(`El número ya fue asignado. Elija otro.`, false);
 
-      mainElement.showNotification('¡Pago aprobado y participante registrado!', true);
-      paidElement.closeWindow();
-      mainElement.updateDisabledButtons();
-      mainElement.tableRender();
+    setTimeout(() => {
+    window.location.reload();
+  }, 5000);
+  
+  throw new Error('Número no disponible');
 
-    } else if (paymentData.status === 'pending') {
-      mainElement.showNotification('Pago pendiente. El participante se registrará al aprobarse.', false);
-    } else {
-      mainElement.showNotification(`Pago rechazado. Intente nuevamente.${JSON.stringify(paymentData)}`, false);
-      divStatus.innerHTML=`${JSON.stringify(paymentData)}`;
-      paidElement.append(divStatus);   
-      
-   }   
-  } catch (err) {
-    console.error(err);
-    mainElement.showNotification('Error al procesar el pago', false);
-  }
-},
-    },
-  });
+  }
 
-  return cardBrick; // opcional, por si quieres manipularlo después
+
+let participantData: Record<string, string>;
+
+  participantData = divParticipant.getParticipantData();
+
+const body = {
+paymentData,
+participantData,
 };
+
+let data: any;
+        
+        try {
+          const res = await fetch('http://localhost:3000/payments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+          
+          data = await res.json();
+          
+          //divParticipant.textContent = JSON.stringify(data, null, 2);
+
+      if (data.validation) {
+
+mainElement.showNotification(data.message, data.validation);
+
+  paidElement.closeWindow();
+  mainElement.updateDisabledButtons();
+  setTimeout(() => window.location.reload(), 5000);
+  return;
+} else {
+  throw new Error('algo salió mal');
+}
+           
+        } catch (err: any) {
+          console.error(err);
+                   mainElement.showNotification(data?.message ?? "Complete los datos del participante.", false);
+  throw err;
+        }
+      },
+      onError: (err: any) =>{
+          
+     console.error(err);
+      mainElement.showNotification('Error al cargar el formulario de pago', false);    
+          
+      },
+   
+    },
+  };
+  
+  const controller = await bricksBuilder.create(
+    'cardPayment',
+    idContainer,
+    settings
+  );
+  
+  setCardPaymentController(controller);
+  
+}
