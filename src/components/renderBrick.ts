@@ -17,7 +17,8 @@ export async function RenderBrick(idContainer: string, divParticipant: Participa
   
   
   const MercadoPagoConstructor = (await loadMercadoPago()) as any;
-
+ 
+ 
   // instanciamos
   const mp = new MercadoPagoConstructor('TEST-142b7eda-ae84-4537-9e72-4bddc099ab6b', {
     locale: 'es-AR',
@@ -76,7 +77,8 @@ let data: any;
           
           data = await res.json();
           
-          //divParticipant.textContent = JSON.stringify(data, null, 2);
+      
+      //divParticipant.textContent = JSON.stringify(data, null, 2);
 
       if (data.validation) {
 
@@ -84,6 +86,7 @@ mainElement.showNotification(data.message, data.validation);
 
   paidElement.closeWindow();
   mainElement.updateDisabledButtons();
+  
   setTimeout(() => window.location.reload(), 5000);
   return;
 } else {
