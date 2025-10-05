@@ -66,7 +66,7 @@ paymentData,
 participantData,
 };
 
-let data: any;
+//let data: any;
         
         try {
           const res = await fetch('http://localhost:3000/payments', {
@@ -75,10 +75,10 @@ let data: any;
             body: JSON.stringify(body),
           });
           
-          data = await res.json();
+          const data = await res.json();
           
       
-      //divParticipant.textContent = JSON.stringify(data, null, 2);
+      //divParticipant.textContent = JSON.stringify(data.response.id, null, 2);
 
       if (data.validation) {
 
@@ -95,13 +95,19 @@ mainElement.showNotification(data.message, data.validation);
            
         } catch (err: any) {
           console.error(err);
-                   mainElement.showNotification(data?.message ?? "Complete los datos del participante.", false);
+          
+          const errorMessage =
+    err?.message?.includes('número') 
+      ? err.message 
+      : 'Complete los datos del participante.';
+                   mainElement.showNotification( errorMessage, false);
   throw err;
         }
       },
       onError: (err: any) =>{
           
-     console.error(err);
+     console.error(err);  
+     
       mainElement.showNotification('Error al cargar el formulario de pago', false);    
           
       },
