@@ -6,6 +6,7 @@ import type { MainElement, PaidElement, ParticipantElement } from './types'
 import { subscribeNumber } from './store';
 import { getCardPaymentController } from './store';
 import { ParticipantData } from './participantData';
+import { TransferForm } from "./transferForm";
 
 
 export function Paid(mainElement: MainElement): PaidElement {
@@ -53,6 +54,8 @@ divOptions.append(divCard, divTransfer, divCripto, divCash);
   }
   
 const divStatus: ParticipantElement = ParticipantData();
+
+const containerTransfer = document.createElement('div');
   
   
   const options: PaymentOptions = {
@@ -76,7 +79,17 @@ const divStatus: ParticipantElement = ParticipantData();
     divTransfer.style.display = 'block';
     divCripto.style.display = 'none';
     divCash.style.display = 'none';
-    divTransfer.textContent = 'hola transfer';
+
+TransferForm(containerTransfer, {
+  alias: 'mi.alias',
+  cbu: 16151836,
+  amount: 2000,
+  raffleNumber: 78,
+});
+
+divTransfer.append(containerTransfer);
+    
+    
   },
   cripto: () => {
     divCard.style.display = 'none';

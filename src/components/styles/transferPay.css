@@ -1,0 +1,65 @@
+.transfer-wrapper {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.transfer-info p {
+  font-size: 1.1rem;
+  margin: 0.3rem 0;
+}
+
+.countdown-text {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.progress-circle {
+  width: 120px;
+  height: 120px;
+  margin: 1rem auto;
+  border-radius: 50%;
+  background: conic-gradient(#4CAF50 var(--progress, 0%), #eee 0%);
+  transition: background 0.4s ease;
+}
+
+.progress-circle.expired {
+  background: conic-gradient(#f44336 100%, #eee 0%);
+}
+
+.progress-circle.success {
+  background: conic-gradient(#4CAF50 100%, #eee 0%);
+}
+
+.status-message {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.progress-circle {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #e0e0e0;
+  border-top-color: #007bff; /* color principal */
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estado éxito o error */
+.progress-circle.success {
+  border-top-color: #28a745;
+  animation: none;
+}
+
+.progress-circle.expired {
+  border-top-color: #dc3545;
+  animation: none;
+}

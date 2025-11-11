@@ -38,3 +38,30 @@ export async function fetchParticipants(): Promise<Participant[]> {
     return [];
   }
 }
+
+export function startCountdown(
+  seconds: number,
+  onTick: (remaining: number) => void,
+  onFinish: () => void
+) {
+  let remaining = seconds;
+  const interval = setInterval(() => {
+    remaining--;
+    onTick(remaining);
+    if (remaining <= 0) {
+      clearInterval(interval);
+      onFinish();
+    }
+  }, 1000);
+  return () => clearInterval(interval); // devuelve función para cancelar
+}
+
+export function create<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  options: Partial<HTMLElementTagNameMap[K]> & { className?: string } = {}
+): HTMLElementTagNameMap[K] {
+  const el = document.createElement(tag);
+  Object.assign(el, options);
+  if (options.className) el.className = options.className;
+  return el;
+}
